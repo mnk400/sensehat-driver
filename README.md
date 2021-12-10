@@ -1,2 +1,2 @@
-# SenseHat monitoring system
-Built from stratch using C++ and no dependencies
+# SenseHat driver
+This is a driver for sense-hat written in C using i2c.
