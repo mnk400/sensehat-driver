@@ -8,6 +8,9 @@
 #define HTS221_ADDRESS 	0x5F
 #define LPS25H_ADDRESS  0x5C
 
+void init_HTS221(int file);
+void init_LP15H(int file);
+
 // Struct which contains the file descriptors for i2c access
 struct i2c_files
 {
@@ -58,7 +61,7 @@ int init(int i2c_num)
         init_LP15H(fds.LPS25H);
         state.LP25H = 1;
     }
-
+    return 0;
 }
 
 void init_HTS221(int file)
