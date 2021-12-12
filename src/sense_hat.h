@@ -1,12 +1,22 @@
 //
-// Reads air pressure
+// Reads air pressure from LPS25H
 //
-int get_pressure(int *pressure, int *p_temp);
+int get_pressure();
 
 //
-// Reads the temperature and humidity
+// Reads air pressure from LPS25H
 //
-int get_temp_humid(int *temp, int *humid);
+float get_temperature_from_lps25h();
+
+//
+// Reads the temperature from HTS221
+//
+float get_temperature();
+
+//
+// Reads the humidity from HTS221
+//
+float get_humidity();
 
 //
 // Initializes i2c
