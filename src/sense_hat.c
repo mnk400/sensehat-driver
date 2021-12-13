@@ -66,19 +66,19 @@ float get_temperature()
     int H_T_out, T_out, T0_degC, T1_degC;
     int tmp;
 
-	rc = i2c_read(fds.HTS221, 0x28+0x80, buf, 4);
-	if (rc == 4)
-	{
-		H_T_out = buf[0] + (buf[1] << 8);
-		T_out = buf[2] + (buf[3] << 8);
-		if (H_T_out > 32767) H_T_out -=65536;
-		if (T_out > 32767) T_out -= 65536;
-		T0_degC = T0_degC_x8 / 8;
-		T1_degC = T1_degC_x8 / 8;
-		tmp = (T_out - T0_OUT) * (T1_degC - T0_degC)*10;
-		return (tmp / (T1_OUT - T0_OUT) + T0_degC*10)/10.0f;
-	}
-	return INT16_MIN;
+    rc = i2c_read(fds.HTS221, 0x28+0x80, buf, 4);
+    if (rc == 4)
+    {
+        H_T_out = buf[0] + (buf[1] << 8);
+        T_out = buf[2] + (buf[3] << 8);
+        if (H_T_out > 32767) H_T_out -=65536;
+        if (T_out > 32767) T_out -= 65536;
+        T0_degC = T0_degC_x8 / 8;
+        T1_degC = T1_degC_x8 / 8;
+        tmp = (T_out - T0_OUT) * (T1_degC - T0_degC)*10;
+        return (tmp / (T1_OUT - T0_OUT) + T0_degC*10)/10.0f;
+    }
+    return INT16_MIN;
 }
 
 float get_humidity()
@@ -89,19 +89,19 @@ float get_humidity()
     int H0_rh, H1_rh;
     int tmp;
 
-	rc = i2c_read(fds.HTS221, 0x28+0x80, buf, 4);
-	if (rc == 4)
-	{
-		H_T_out = buf[0] + (buf[1] << 8);
-		T_out = buf[2] + (buf[3] << 8);
-		if (H_T_out > 32767) H_T_out -=65536;
-		if (T_out > 32767) T_out -= 65536;
-		H0_rh = H0_rH_x2 / 2;
-		H1_rh = H1_rH_x2 / 2;
-		tmp = (H_T_out - H0_T0_OUT) * (H1_rh - H0_rh)*10;
-		return (tmp / (H1_T0_OUT - H0_T0_OUT) + H0_rh*10)/10.0f;
-	}
-	return INT16_MIN;
+    rc = i2c_read(fds.HTS221, 0x28+0x80, buf, 4);
+    if (rc == 4)
+    {
+        H_T_out = buf[0] + (buf[1] << 8);
+        T_out = buf[2] + (buf[3] << 8);
+        if (H_T_out > 32767) H_T_out -=65536;
+        if (T_out > 32767) T_out -= 65536;
+        H0_rh = H0_rH_x2 / 2;
+        H1_rh = H1_rH_x2 / 2;
+        tmp = (H_T_out - H0_T0_OUT) * (H1_rh - H0_rh)*10;
+        return (tmp / (H1_T0_OUT - H0_T0_OUT) + H0_rh*10)/10.0f;
+    }
+    return INT16_MIN;
 }
 
 int get_pressure()
@@ -109,17 +109,17 @@ int get_pressure()
     unsigned char buf[8];
     int rc, P;
 
-	if(fds.LPS25H != -1)
-	{
-		rc = i2c_read(fds.LPS25H, 0x28+0x80, buf, 5);
-		if (rc == 5)
-		{
-			P = buf[0] + (buf[1]<<8) + (buf[2]<<16); 
-			return P / 4096;
-		}
-		return 0;	
-	}
-	return -1;
+    if(fds.LPS25H != -1)
+    {
+        rc = i2c_read(fds.LPS25H, 0x28+0x80, buf, 5);
+        if (rc == 5)
+        {
+            P = buf[0] + (buf[1]<<8) + (buf[2]<<16); 
+            return P / 4096;
+        }
+        return 0;	
+    }
+    return -1;
 }
 
 float get_temperature_from_lps25h()
@@ -127,59 +127,59 @@ float get_temperature_from_lps25h()
     unsigned char buf[8];
     int rc, T;
 
-	if (fds.LPS25H != -1)
-	{
-		rc = i2c_read(fds.LPS25H, 0x28+0x80, buf, 5);
-		if (rc == 5)
-		{
-			T = buf[3] + (buf[4] << 8);
-			if (T > 32767) T -= 65536;
-			T = 425 + (T / 48); // 42.5 + T value/480
-			return (T)/10.0f;
-		}
-		return 1;	
-	}
-	return 0;
+    if (fds.LPS25H != -1)
+    {
+        rc = i2c_read(fds.LPS25H, 0x28+0x80, buf, 5);
+        if (rc == 5)
+        {
+            T = buf[3] + (buf[4] << 8);
+            if (T > 32767) T -= 65536;
+            T = 425 + (T / 48); // 42.5 + T value/480
+            return (T)/10.0f;
+        }
+        return 1;	
+    }
+    return 0;
 }
 
 void init_HTS221()
 {   
     // code to initialize and calibrate HTS221
     // Initialization
-	i2c_read(fds.HTS221, 0x10, calibrate, 1);
-	calibrate[0] &= 0xc0;
-	calibrate[0] |= 0x1b; // average temperature = 16, humidity = 32
-	i2c_write(fds.HTS221, 0x10, calibrate, 1);
+    i2c_read(fds.HTS221, 0x10, calibrate, 1);
+    calibrate[0] &= 0xc0;
+    calibrate[0] |= 0x1b; // average temperature = 16, humidity = 32
+    i2c_write(fds.HTS221, 0x10, calibrate, 1);
 
-	i2c_read(fds.HTS221, 0x20+0x80, calibrate, 3); // read CTRL_REG 1 to 3
-	calibrate[0] &= 0x78; // keep reserved bits
-	calibrate[0] |= 0x81; // bit to turn on and set the sample rate to 1hz
-	calibrate[1] &= 0x7c; // bit to  turn off heater, boot, one shot
-	i2c_write(fds.HTS221, 0x20+0x80, calibrate, 3);
+    i2c_read(fds.HTS221, 0x20+0x80, calibrate, 3); // read CTRL_REG 1 to 3
+    calibrate[0] &= 0x78; // keep reserved bits
+    calibrate[0] |= 0x81; // bit to turn on and set the sample rate to 1hz
+    calibrate[1] &= 0x7c; // bit to  turn off heater, boot, one shot
+    i2c_write(fds.HTS221, 0x20+0x80, calibrate, 3);
 
-	// calibrate humidity and temperature
-	i2c_read(fds.HTS221, 0x30+0x80, calibrate, 16);
-	H0_rH_x2 = calibrate[0];
-	H1_rH_x2 = calibrate[1];
-	T0_degC_x8 = calibrate[2];
-	T1_degC_x8 = calibrate[3];
-	T0_degC_x8 |= ((calibrate[5] & 0x3) << 8);
-	T1_degC_x8 |= ((calibrate[5] & 0xc) << 6);
-	H0_T0_OUT = calibrate[6] | (calibrate[7] << 8);
-	H1_T0_OUT = calibrate[10] | (calibrate[11] << 8);
-	T0_OUT = calibrate[12] | (calibrate[13] << 8);
-	T1_OUT = calibrate[14] | (calibrate[15] << 8);
-	if (H0_T0_OUT > 32767) H0_T0_OUT -= 65536;
-	if (H1_T0_OUT > 32767) H1_T0_OUT -= 65536;
-	if (T0_OUT > 32767) T0_OUT -= 65536;
-	if (T1_OUT > 32767) T1_OUT -= 65536;
+    // calibrate humidity and temperature
+    i2c_read(fds.HTS221, 0x30+0x80, calibrate, 16);
+    H0_rH_x2 = calibrate[0];
+    H1_rH_x2 = calibrate[1];
+    T0_degC_x8 = calibrate[2];
+    T1_degC_x8 = calibrate[3];
+    T0_degC_x8 |= ((calibrate[5] & 0x3) << 8);
+    T1_degC_x8 |= ((calibrate[5] & 0xc) << 6);
+    H0_T0_OUT = calibrate[6] | (calibrate[7] << 8);
+    H1_T0_OUT = calibrate[10] | (calibrate[11] << 8);
+    T0_OUT = calibrate[12] | (calibrate[13] << 8);
+    T1_OUT = calibrate[14] | (calibrate[15] << 8);
+    if (H0_T0_OUT > 32767) H0_T0_OUT -= 65536;
+    if (H1_T0_OUT > 32767) H1_T0_OUT -= 65536;
+    if (T0_OUT > 32767) T0_OUT -= 65536;
+    if (T1_OUT > 32767) T1_OUT -= 65536;
 }
 
 void init_LPS25H()
 {   
     // code to intialize LP15H goes here
     calibrate[0] = 0x90; // bit to turn on and set the sample rate to 1hz
-	i2c_write(fds.LPS25H, 0x20, calibrate, 1);
+    i2c_write(fds.LPS25H, 0x20, calibrate, 1);
 }
 
 static int i2c_read(int file, unsigned char addr, unsigned char *buf, int len)
@@ -208,7 +208,7 @@ static int i2c_write(int file, unsigned char addr, unsigned char *buf, int len)
 
 void stop(void)
 {
-	// Close all I2C file handles
-	if (fds.HTS221 != -1) close(fds.HTS221);
-	if (fds.LPS25H != -1) close(fds.LPS25H);
+    // Close all I2C file handles
+    if (fds.HTS221 != -1) close(fds.HTS221);
+    if (fds.LPS25H != -1) close(fds.LPS25H);
 }
