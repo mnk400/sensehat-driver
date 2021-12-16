@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C"{
+#endif 
 //
 // Reads air pressure from LPS25H
 //
@@ -27,3 +30,7 @@ int init(int i2c_num);
 // closes i2c
 //
 void stop(void);
+
+#ifdef __cplusplus
+}
+#endif
